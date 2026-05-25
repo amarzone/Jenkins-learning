@@ -30,7 +30,7 @@ pipeline {
                     fi
                     
                     # Unzip with overwrite flag (no prompt)
-                    unzip -o terraform.zip
+                    unzip terraform.zip
                     
                     # Move to bin directory
                     sudo mv terraform /usr/local/bin/ || mv terraform /usr/local/bin/
