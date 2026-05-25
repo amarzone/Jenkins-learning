@@ -20,7 +20,7 @@ pipeline {
                 sh '''
                     echo "Installing Terraform..."
                     # Download and install Terraform
-                    TERRAFORM_VERSION="1.6.0"
+                    TERRAFORM_VERSION="1.15.0"
                     wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                     unzip -q terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                     sudo mv terraform /usr/local/bin/
