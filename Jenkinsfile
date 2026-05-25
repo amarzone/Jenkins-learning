@@ -14,6 +14,24 @@ pipeline {
             }
         }
 
+        stage('Setup') {
+            steps {
+                echo 'Setting up environment...'
+                sh '''
+                    echo "Installing Terraform..."
+                    # Download and install Terraform
+                    TERRAFORM_VERSION="1.6.0"
+                    wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                    unzip -q terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                    sudo mv terraform /usr/local/bin/
+                    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                    
+                    echo "Terraform installed:"
+                    terraform version
+                '''
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 echo 'Initializing Terraform...'
@@ -59,7 +77,7 @@ pipeline {
                 echo '--- Stage 4: Checkov Security Scanning ---'
                 sh '''
                     echo "Installing Checkov..."
-                    pip install -q checkov || apt-get install -y python3-pip && pip3 install -q checkov
+                    pip install -q checkov 2>/dev/null || (apt-get update -qq && apt-get install -y python3-pip && pip3 install -q checkov)
                     
                     echo "Running Checkov for security & compliance checks..."
                     checkov -d . --framework terraform --output cli --quiet || true
@@ -70,32 +88,46 @@ pipeline {
                 echo '--- Stage 5: Trivy Infrastructure Scanning ---'
                 sh '''
                     echo "Installing Trivy..."
-                    wget -q https://github.com/aquasecurity/trivy/releases/download/v0.45.0/trivy_0.45.0_Linux-64bit.tar.gz -O trivy.tar.gz || \
-                    apt-get install -y trivy
-                    tar -xzf trivy.tar.gz 2>/dev/null || true
+                    TRIVY_VERSION="0.45.0"
+                    wget -q https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -O trivy.tar.gz 2>/dev/null || \
+                    (apt-get update -qq && apt-get install -y trivy)
+                    
+                    if [ -f trivy.tar.gz ]; then
+                        tar -xzf trivy.tar.gz 2>/dev/null
+                        sudo mv trivy /usr/local/bin/ 2>/dev/null || true
+                    fi
                     
                     echo "Running Trivy for IaC scanning..."
-                    trivy config . --format json > trivy-report.json || true
-                    trivy config . --severity CRITICAL,HIGH || true
+                    trivy config . --format json > trivy-report.json 2>/dev/null || true
+                    trivy config . --severity CRITICAL,HIGH 2>/dev/null || true
                 '''
                 
                 // Stage 6: Terrascan - Compliance Scanning
                 echo '--- Stage 6: Terrascan Compliance Check ---'
                 sh '''
                     echo "Installing Terrascan..."
-                    curl -L https://github.com/tenable/terrascan/releases/download/v1.18.2/terrascan_1.18.2_Linux_x86_64.tar.gz -o terrascan.tar.gz || true
-                    tar -xzf terrascan.tar.gz 2>/dev/null || true
+                    TERRASCAN_VERSION="1.18.2"
+                    curl -L https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz -o terrascan.tar.gz 2>/dev/null || true
+                    
+                    if [ -f terrascan.tar.gz ]; then
+                        tar -xzf terrascan.tar.gz 2>/dev/null
+                        sudo mv terrascan /usr/local/bin/ 2>/dev/null || chmod +x ./terrascan
+                    fi
                     
                     echo "Running Terrascan..."
-                    ./terrascan scan -t aws -o json > terrascan-report.json || true
-                    ./terrascan scan -t aws || true
+                    if command -v terrascan &> /dev/null; then
+                        terrascan scan -t aws -o json > terrascan-report.json 2>/dev/null || true
+                        terrascan scan -t aws 2>/dev/null || true
+                    else
+                        echo "Terrascan not available, skipping..."
+                    fi
                 '''
                 
                 // Stage 7: Terraform Plan
                 echo '--- Stage 7: Terraform Plan (Dry Run) ---'
                 sh '''
                     echo "Running Terraform Plan..."
-                    terraform plan -out=tfplan -json > terraform-plan.json || true
+                    terraform plan -out=tfplan -json > terraform-plan.json 2>/dev/null || true
                     terraform plan -out=tfplan
                 '''
             }
@@ -143,13 +175,13 @@ pipeline {
             echo '========== Test Reports Summary =========='
             sh '''
                 echo "Generated Reports:"
-                ls -lh *-report.json tfplan.json 2>/dev/null || echo "No reports generated"
+                ls -lh *-report.json tfplan* 2>/dev/null || echo "No reports generated"
             '''
             // Archive reports for Jenkins UI
             archiveArtifacts artifacts: '*-report.json,tfplan*', allowEmptyArchive: true
             
             // Clean up
-            sh 'rm -f trivy.tar.gz terrascan.tar.gz terrascan 2>/dev/null || true'
+            sh 'rm -f trivy.tar.gz terrascan.tar.gz 2>/dev/null || true'
         }
         success {
             echo 'Pipeline succeeded!'
