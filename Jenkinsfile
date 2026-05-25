@@ -1,4 +1,4 @@
-pipeline { 
+pipeline {   
     agent any
 
     options {
@@ -21,10 +21,22 @@ pipeline {
                     echo "Installing Terraform..."
                     # Download and install Terraform
                     TERRAFORM_VERSION="1.15.0"
-                    wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                    sudo unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                    sudo mv terraform /usr/local/bin/
-                    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                    wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
+                    
+                    # Verify download was successful
+                    if [ ! -f terraform.zip ]; then
+                        echo "Failed to download Terraform"
+                        exit 1
+                    fi
+                    
+                    # Unzip with overwrite flag (no prompt)
+                    unzip -o terraform.zip
+                    
+                    # Move to bin directory
+                    sudo mv terraform /usr/local/bin/ || mv terraform /usr/local/bin/
+                    
+                    # Cleanup
+                    rm -f terraform.zip
                     
                     echo "Terraform installed:"
                     terraform version
