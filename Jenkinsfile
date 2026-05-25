@@ -22,7 +22,7 @@ pipeline {
                     # Download and install Terraform
                     TERRAFORM_VERSION="1.15.0"
                     wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                    unzip -q terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                    unzip -q -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                     sudo mv terraform /usr/local/bin/
                     rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                     
