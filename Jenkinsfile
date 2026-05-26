@@ -1,5 +1,7 @@
 pipeline {   
-    agent any
+    agent { 
+        label: "ritik"
+    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         timeout(time: 1, unit: 'HOURS')
@@ -31,6 +33,7 @@ pipeline {
                     # Unzip with overwrite flag (no prompt)
                     unzip -o -q terraform.zip
                     ls -lrt
+                    echo $PATH
                     # Move to bin directory
                     # sudo mv terraform /usr/local/bin/ || mv terraform /usr/local/bin/
                     
