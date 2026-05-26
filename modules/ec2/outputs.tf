@@ -15,7 +15,7 @@ output "private_ip" {
 
 output "instance_arn" {
   description = "ARN of the EC2 instance"
-  value       =module.ec2_node.arn
+  value       =  module.ec2_node.arn
 }
 
 output "instance_state" {
