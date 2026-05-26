@@ -33,7 +33,7 @@ pipeline {
                     unzip terraform.zip
                     
                     # Move to bin directory
-                    sudo mv terraform /usr/local/bin/ || mv terraform /usr/local/bin/
+                    # sudo mv terraform /usr/local/bin/ || mv terraform /usr/local/bin/
                     
                     # Cleanup
                     rm -f terraform.zip
