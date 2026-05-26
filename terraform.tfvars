@@ -1,6 +1,6 @@
 aws_region             = "eu-north-1"
-aws_access_key         = "YOUR_AWS_ACCESS_KEY_HERE"
-aws_secret_key         = "YOUR_AWS_SECRET_KEY_HERE"
+aws_access_key         = "AKIA4OPOVECDITDXDVLE"
+aws_secret_key         = "2sdxWfDC8MCQItb79Rc5leoNoHHuXaBHOv80PhFL"
 instance_name          = "jenkins-worker-node"
 instance_type          = "t3.micro"
 ami_id                 = "ami-0c55b159cbfafe1f0"  # Ubuntu 22.04 LTS in eu-north-1
