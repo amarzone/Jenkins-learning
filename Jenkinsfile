@@ -60,6 +60,7 @@ pipeline {
                 // Stage 1: Terraform Format Check
                 echo '--- Stage 1: Terraform Format Check ---'
                 sh '''
+                    terraform fmt
                     echo "Checking Terraform formatting..."
                     terraform fmt -check -recursive . || {
                         echo "Terraform files are not properly formatted"
