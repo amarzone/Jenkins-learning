@@ -1,6 +1,5 @@
 output "instance_id" {
   description = "The ID of the EC2 instance"
-  value       = aws_instance.main.id
   value       = module.ec2_node.main.id
 }
 
