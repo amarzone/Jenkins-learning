@@ -1,6 +1,6 @@
 pipeline {   
     agent { 
-        label: "ritik"
+        label "ritik"
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
