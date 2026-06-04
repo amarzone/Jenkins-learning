@@ -41,6 +41,12 @@ variable "security_group_ids" {
   default     = []
 }
 
+variable "aws_security_group" {
+  description = "List of security group IDs to attach to the instance"
+  type        = list(string)
+  default     = ["sg-0b10a6039206f4f2a"]
+}
+
 variable "subnet_id" {
   description = "Subnet ID where the instance will be created"
   type        = string
