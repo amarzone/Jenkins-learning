@@ -98,14 +98,8 @@ pipeline {
                 sh '''
                     echo "--- Trivy ---"
                     TRIVY_VERSION="0.45.0"
-
-                    wget -q https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -O trivy.tar.gz || true
-
-                    if [ -f trivy.tar.gz ]; then
-                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
-
-                    fi
-
+                    wget -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
+                    
                     trivy config . --severity HIGH,CRITICAL || true
                 '''
 
