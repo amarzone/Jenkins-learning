@@ -34,4 +34,3 @@ variable "associate_public_ip" {
 variable "environment" {
   type = string
 }
-``
