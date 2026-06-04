@@ -38,6 +38,9 @@ pipeline {
 
                     echo "Terraform Version:"
                     terraform version
+
+                    for i in requirement.txt:
+                        sudo yum install $i -y
                 '''
             }
         }
