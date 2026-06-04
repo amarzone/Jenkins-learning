@@ -40,8 +40,16 @@ pipeline {
                     terraform version
                     
                     sudo apt update
-                    sudo apt install -y python3-pip
-                    pip3 install -r requirements.txt
+                    sudo apt install -y python3-pip python3-venv
+                    
+                    # Create virtual environment
+                    python3 -m venv venv
+                    
+                    # Activate it
+                    source venv/bin/activate
+                    
+                    # Install packages inside venv
+                    pip install -r requirements.txt
 
                 '''
             }
