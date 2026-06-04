@@ -45,7 +45,7 @@ pipeline {
                         else
                             pip3 install "$i"
                         fi
-                    done < requirements.txt
+                    done < requirement.txt
                 '''
             }
         }
