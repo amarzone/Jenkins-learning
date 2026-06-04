@@ -39,8 +39,13 @@ pipeline {
                     echo "Terraform Version:"
                     terraform version
 
-                    for i in requirement.txt:
-                        sudo yum install $i -y || pip3 install $i
+                    while read -r i; do
+                        if [ "$i" == "python3-pip" ]; then
+                            sudo yum install -y python3-pip
+                        else
+                            pip3 install "$i"
+                        fi
+                    done < requirements.txt
                 '''
             }
         }
