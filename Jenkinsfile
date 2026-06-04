@@ -90,7 +90,7 @@ pipeline {
                 // ✅ Stage 4: Checkov
                 sh '''
                     echo "--- Checkov ---"
-                    pip install -q checkov || pip3 install -q checkov
+                    
                     checkov -d . --framework terraform --quiet || true
                 '''
 
