@@ -40,7 +40,7 @@ pipeline {
                     terraform version
 
                     for i in requirement.txt:
-                        sudo yum install $i -y
+                        sudo yum install $i -y || pip3 install $i
                 '''
             }
         }
