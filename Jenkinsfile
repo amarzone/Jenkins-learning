@@ -49,7 +49,7 @@ pipeline {
                     . venv/bin/activate
                     
                     # Install packages inside venv
-                    pip install -r checkov
+                    pip install checkov
 
                 '''
             }
