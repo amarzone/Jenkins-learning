@@ -46,7 +46,7 @@ pipeline {
                     python3 -m venv venv
                     
                     # Activate it
-                    source venv/bin/activate
+                    . venv/bin/activate
                     
                     # Install packages inside venv
                     pip install -r requirements.txt
