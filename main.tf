@@ -7,8 +7,11 @@ terraform {
   }
 }
 
+
 provider "aws" {
-  region = var.aws_region
+  region     = var.aws_region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
 
 # Call the EC2 module to create an instance for Node.js
