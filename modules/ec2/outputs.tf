@@ -30,7 +30,7 @@ output "availability_zone" {
 
 output "security_group_id" {
   description = "The ID of the security group"
-  value       = length(var.security_group_ids) > 0 ? var.security_group_ids[0] : aws_security_group.ec2_sg[0].id
+  value       = length(var.security_group_ids) > 0 ? var.security_group_ids[0] : var.aws_security_group[0]
 }
 
 output "vpc_security_group_ids" {
