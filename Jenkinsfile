@@ -39,8 +39,9 @@ pipeline {
                     echo "Terraform Version:"
                     terraform version
                     
+                    sudo apt update
                     sudo apt install -y python3-pip
-                    sudo pip3 install -r requirements.txt
+                    pip3 install -r requirements.txt
 
                 '''
             }
